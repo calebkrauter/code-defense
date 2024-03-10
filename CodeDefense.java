@@ -31,29 +31,31 @@ public class CodeDefense {
      * 
      * @throws NoSuchAlgorithmException
      * @throws InvalidKeySpecException
+     * @throws IOException 
      */
-    public static void main(final String[] args) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public static void main(final String[] args) throws InvalidKeySpecException, NoSuchAlgorithmException, IOException{
         Scanner input = new Scanner(System.in);
-        // final String firstName = promptForName("first", input);
-        // System.out.println("First Name: " + firstName);
+        final String firstName = promptForName("first", input);
+        //System.out.println("First Name: " + firstName);
 
-        // final String lastName = promptForName("last", input);
-        // System.out.println("Last Name: " + lastName);
+        final String lastName = promptForName("last", input);
+        //System.out.println("Last Name: " + lastName);
 
-        // final BigInteger value1 = promptForInt(input);
-        // System.out.println("Value 1: " + value1);
+        final BigInteger value1 = promptForInt(input);
+        //System.out.println("Value 1: " + value1);
 
-        // final BigInteger value2 = promptForInt(input);
-        // System.out.println("Value 2: " + value2);
+        final BigInteger value2 = promptForInt(input);
+        //System.out.println("Value 2: " + value2);
 
-        // final String inputFile = promptForInputFileName(input);
-        // System.out.println("Input File Name: " + inputFile);
+        final String inputFile = promptForInputFileName(input);
+        //System.out.println("Input File Name: " + inputFile);
 
-        // final String outputFile = promptForOutputFileName(input, inputFile);
+        final String outputFile = promptForOutputFileName(input, inputFile);
         // System.out.println("Output File Name: " + outputFile);
 
         getPasswords(input);
 
+        writeToFile(firstName, lastName, value1, value2, inputFile, outputFile, input);
     }
 
     /**
@@ -255,6 +257,36 @@ public class CodeDefense {
             comparePassword(input);
         } else {
             System.out.println("Passwords match.");
+        }
+    }
+
+    static private void writeToFile(final String firstName, final String lastName, final BigInteger int1,
+        final BigInteger int2, final String inputFileName, final String outputFileName, final Scanner input)
+        throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
+
+        PrintWriter output = new PrintWriter(new FileWriter(outputFileName));
+    
+        output.println("first name: " + firstName);
+        output.println("last name: " + lastName);
+        output.println("first integer: " + int1);
+        output.println("second integer: " + int2);
+        output.println("sum of integers: " + int1.add(int2));
+        output.println("product of integers: " + int1.multiply(int2));
+        File inputFile = new File(inputFileName);
+        while (!inputFile.exists()) {
+            inputFile = new File(promptForInputFileName(input));
+        }
+    
+        output.println("Input file " + inputFileName + " contents:");
+        try (Scanner fileScanner = new Scanner(inputFile))  {
+            while (fileScanner.hasNextLine()) {
+                output.println(fileScanner.nextLine());
+            }
+        } catch (FileNotFoundException e) {
+            writeToFile(firstName, lastName, int1, int2, inputFileName, outputFileName, input);
+            return;
+        } finally {
+            output.close();
         }
     }
 }
