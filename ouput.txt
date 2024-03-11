@@ -1,5 +1,0 @@
-Input file input.txt contents:
-Cale1
-Krau
-123
-1245
