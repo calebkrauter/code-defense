@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import java.util.Base64;
 
 /**
  * CodeDefense propmts the user for various forms of input with security
