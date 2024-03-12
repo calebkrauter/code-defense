@@ -1,3 +1,7 @@
+// TCSS 483
+// Defend Your Code
+// Caleb Krauter, Nathan Hinthorne, Trae Claar
+
 import java.io.PrintWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -103,11 +107,19 @@ public class CodeDefense {
         BigInteger min = BigInteger.valueOf(2).pow(31).negate();
         BigInteger max = BigInteger.valueOf(2).pow(31).subtract(BigInteger.ONE);
 
-        BigInteger n;
-        do {
-            System.out.println("Please provide a 4 byte integer.");
-            n = new BigInteger(input.next());
-        } while (min.compareTo(n) > 0 || max.compareTo(n) < 0);
+        BigInteger n = null;
+        System.out.println("Please provide a 4 byte integer.");
+        try {
+            n = new BigInteger(input.nextLine());
+
+            if (min.compareTo(n) > 0 || max.compareTo(n) < 0) {
+                System.out.println("Not a valid integer. Please try again.");
+                return promptForInt(input);
+            }
+
+        } catch(Exception e) {
+            return promptForInt(input);
+        }
 
         return n;
     }
@@ -115,9 +127,9 @@ public class CodeDefense {
     static private String promptForInputFileName(final Scanner input) {
         System.out.println("Please provide the input file name.");
         System.out.println("Must be a .txt file in the current directory. The file name must"
-                + " be between 1 and 50 characters");
+                + " be between 1 and 50 characters excluding the extension.");
 
-        String name = input.next();
+        String name = input.nextLine();
 
         if (mismatchedInput(name, "^[a-zA-Z0-9]{1,50}.txt$")) {
             System.out.println("Not a valid file name. Please try again.");
@@ -130,9 +142,9 @@ public class CodeDefense {
     static private String promptForOutputFileName(final Scanner input, final String inputFileName) {
         System.out.println("Please provide the output file name.");
         System.out.println("Must be a .txt file in the current directory. The file name must"
-                + " be between 1 and 50 characters and must not match the input file name.");
+                + " be between 1 and 50 characters excluding the extension.");
 
-        String name = input.next();
+        String name = input.nextLine();
 
         if (mismatchedInput(name, "^[a-zA-Z0-9]{1,50}.txt$") || name.equals(inputFileName)) {
             System.out.println("Not a valid file name. Please try again.");
@@ -161,7 +173,7 @@ public class CodeDefense {
         System.out.println(message);
         System.out.println("");
 
-        String password = input.next();
+        String password = input.nextLine();
 
         if (mismatchedInput(password, "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[\\.,!\\?'\";:-])"
                 + "(?!.*[a-z]{4,}).{10,}$")) {
@@ -204,7 +216,11 @@ public class CodeDefense {
      * @throws IOException
      */
     static private void storePassword(final Scanner input) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        final String password = promptForPassword(input, "Please provide a password.");
+        final String password = promptForPassword(input, "Please provide a password. \n"
+                                   + "Must be at least 10 characters long and contain at "
+                                   + "least 1 uppercase character, lowercase character, digit, "
+                                   + "punctuation mark, and must not have more than 3 consecutive "
+                                   + "lowercase characters. No special characters other than punctuation.");
         System.out.println("Password: " + password);
 
         byte[] salt = generateSalt();
